@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Log in with your account</title>
+</head>
+
+<body>
+<h1>Product list</h1>
+<style>
+    table {
+        width: 100%; /* Занимает всю ширину родительского элемента */
+        border-collapse: collapse; /* Убирает двойные границы между ячейками */
+    }
+    th, td {
+        padding: 8px; /* Отступы внутри ячеек */
+        text-align: center; /* Выравнивание текста по левому краю */
+        border: 1px solid #ddd; /* Граница ячеек */
+        white-space: wrap; /* Запрет на перенос строк */
+    }
+    th {
+        background-color: #f2f2f2; /* Цвет фона заголовков */
+    }
+</style>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>UserName</th>
+        <th>Surname</th>
+        <th>Roles</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="user : ${allUsers}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.surname}"></td>
+        <td th:text="${#strings.listJoin(user.roles, ', ')}"></td>
+        <td>
+            <div style="display: flex; gap: 10px; justify-content: center">
+                <form th:action="@{/users/delete/{id}(id=${user.id})}" method="post">
+                    <button type="submit" name="delete" th:text="'Delete'">Delete</button>
+                </form>
+                <form th:action="@{/users/update/{id}(id=${user.id})}" method="post">
+                    <button type="submit" name="update" th:text="'Update'">Update</button>
+                </form>
+            </div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
