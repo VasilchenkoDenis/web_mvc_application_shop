@@ -6,14 +6,20 @@
 </head>
 <body>
 <form th:action="@{/admin/addUser}" method="post" >
-  <h1> Name:</h1>
-  <input type="text" name="username" />
+  <div>
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" />
+  </div>
   <br>
-  <h1> Surname:</h1>
-  <input type="text" name="surname" />
+  <div>
+    <label for="surname">Surname:</label>
+    <input type="text" id="surname" name="surname" />
+  </div>
   <br>
-  <h1> Role:</h1>
-  <input type="text" name="role" />
+  <div>
+    <label for="role">Role:</label>
+    <input type="text" id="role" name="role" />
+  </div>
   <input type="submit" />
 </form>
 </body>
