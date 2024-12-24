@@ -1,15 +1,12 @@
 package com.denisvasilchenko.web_mvc_application.service;
 
 
-import com.denisvasilchenko.web_mvc_application.entity.Role;
+
 import com.denisvasilchenko.web_mvc_application.entity.User;
-import com.denisvasilchenko.web_mvc_application.repository.RoleRepository;
 import com.denisvasilchenko.web_mvc_application.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,8 +14,7 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    RoleRepository roleRepository;
+
 
     public User findUserById(int id) {
         Optional<User> user = userRepository.findById(id);
@@ -32,8 +28,18 @@ public class UserService {
         if (savedUser != null) {
             return false;
         }
-        user.setRoles(Collections.singleton(new Role("ROLE_USER")));
+
+//        user.setRoles(Collections.singleton(Role.ROLE_SELLER));
         userRepository.save(user);
         return true;
+    }
+    public void deleteUser(int id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            userRepository.deleteById(id);
+        }
+    }
+    public void updateUser(User user) {
+        userRepository.save(user);
     }
 }

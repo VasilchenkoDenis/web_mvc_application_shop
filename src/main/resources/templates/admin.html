@@ -1,12 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <title>Log in with your account</title>
 </head>
-
-<body>
-<h1>Product list</h1>
 <style>
     table {
         width: 100%; /* Занимает всю ширину родительского элемента */
@@ -22,6 +19,8 @@
         background-color: #f2f2f2; /* Цвет фона заголовков */
     }
 </style>
+<body>
+<h1>Product list</h1>
 <table>
     <tr>
         <th>ID</th>
@@ -37,15 +36,18 @@
         <td th:text="${#strings.listJoin(user.roles, ', ')}"></td>
         <td>
             <div style="display: flex; gap: 10px; justify-content: center">
-                <form th:action="@{/users/delete/{id}(id=${user.id})}" method="post">
+                <form th:action="@{/admin/delete/{id}(id=${user.id})}" method="post">
                     <button type="submit" name="delete" th:text="'Delete'">Delete</button>
                 </form>
-                <form th:action="@{/users/update/{id}(id=${user.id})}" method="post">
+                <form th:action="@{/admin/updateUser/{id}(id=${user.id})}" method="post">
                     <button type="submit" name="update" th:text="'Update'">Update</button>
                 </form>
             </div>
         </td>
     </tr>
 </table>
+<form th:action="@{/admin/addUser}" method="get">
+    <button type="submit" name="add" th:text="'Add User'">Add USer</button>
+</form>
 </body>
 </html>
