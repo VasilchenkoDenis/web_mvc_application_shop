@@ -5,6 +5,13 @@
     <title>Title</title>
 </head>
 <body>
-<h2>HELLO</h2>
+<div style="display: flex; gap: 10px; justify-content: center; align-items: center; height: 100vh;">
+    <form th:action="@{/admin}" method="get">
+        <button type="submit" name="Admin panel" th:text="'Admin panel'" style="font-size: 24px; padding: 10px 20px;">Admin panel</button>
+    </form>
+    <form th:action="@{/store}" method="get">
+        <button type="submit" name="Enter the store" th:text="'Enter the store'" style="font-size: 24px; padding: 10px 20px;">Enter the store</button>
+    </form>
+</div>
 </body>
 </html>
