@@ -28,8 +28,7 @@ public class SellerController {
     @PostMapping("/store/addProduct")
     public String addProductToDataBase(@RequestParam String name, @RequestParam double price, @RequestParam double purchasePrice, @RequestParam int quantity) {
         if(name!=null&&quantity!=0){
-            productService.saveProduct(new Product(name, price, purchasePrice, quantity));
-            return "redirect:/store";
+            if(productService.saveProduct(new Product(name, price, purchasePrice, quantity))){return "redirect:/store";}
         }
         return "redirect:/store/addProduct";
     }
