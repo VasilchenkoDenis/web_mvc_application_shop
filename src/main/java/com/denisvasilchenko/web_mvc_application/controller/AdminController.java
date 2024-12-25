@@ -24,7 +24,7 @@ public class AdminController {
     }
     @PostMapping("admin/addUser")
     public String addUserToDataBase(@RequestParam String username, @RequestParam String surname, @RequestParam Role role) {
-        if(username!=null&&surname!=null) {
+        if(username!=null&&surname!=null&&role!=null) {
             if(userService.saveUser(new User(username, surname, role))){return "redirect:/admin";}
         }
         return "redirect:/admin/addUser";
