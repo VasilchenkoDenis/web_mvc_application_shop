@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<form th:action="@{/store/addProduct}" method="post" >
+  <div>
+    <label for="name">Product name:</label>
+    <input type="text" id="name" name="name" />
+  </div>
+  <br>
+  <div>
+    <label for="price">Product price:</label>
+    <input type="number" id="price" name="price" />
+  </div>
+  <br>
+  <div>
+    <label for="purchasePrice">Product purchase price:</label>
+    <input type="number" id="purchasePrice" name="purchasePrice" />
+  </div>
+  <div>
+    <label for="quantity">Product quantity:</label>
+    <input type="number" id="quantity" name="quantity" />
+  </div>
+  <input type="submit" />
+</form>
+</body>
+</html>
