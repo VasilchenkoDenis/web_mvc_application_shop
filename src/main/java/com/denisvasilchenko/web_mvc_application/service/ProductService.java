@@ -4,7 +4,9 @@ import com.denisvasilchenko.web_mvc_application.entity.Product;
 import com.denisvasilchenko.web_mvc_application.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.apache.commons.text.similarity.LevenshteinDistance;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,5 +24,24 @@ public class ProductService {
         }
         productRepository.save(product);
         return true;
+    }
+
+    public Product findProductByName(String name) {
+        Product product = productRepository.findByName(name);
+        if (product!=null) {return product;}
+        List<Product> products = productRepository.findAll();
+        Product suitableProduct = null;
+        int minDistance = Integer.MAX_VALUE;
+        for(Product p : products) {
+            String str = p.getName();
+            LevenshteinDistance levenshteinDistance = LevenshteinDistance.getDefaultInstance();
+            int distance = levenshteinDistance.apply(str, name);
+            System.out.println(distance);
+            if (distance < minDistance) {
+                minDistance = distance;
+                suitableProduct=p;}
+        }
+
+        return suitableProduct;
     }
 }
