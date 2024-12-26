@@ -1,43 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Management</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body {
+      display: flex;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    #searchContainer {
+      width: 30%;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      position: relative;
+    }
+
+    #tableContainer {
+      display: none;
+      overflow: auto;
+      max-width: 70%;
+      height: 400px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .container {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+  </style>
 </head>
 <body>
-<button id="showTableButton">Показать список товаров</button>
-<div id="tableContainer" style="display: none; overflow-x: auto; overflow-y: auto; max-width: 100%; height: 400px;">
-  <table>
-    <thead>
-    <tr>
-      <th>ID</th>
-      <th>Product name</th>
-      <th>Price</th>
-      <th>Quantity</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="item : ${products}">
-      <td th:text="${item.id}"></td>
-      <td th:text="${item.name}"></td>
-      <td th:text="${item.price}"></td>
-      <td th:text="${item.quantity}"></td>
-    </tr>
-    </tbody>
-  </table>
+
+<div class="container">
+  <div id="searchContainer">
+    <h1>Search product</h1>
+    <input type="text" id="searchInput" placeholder="Введите название товара">
+    <button id="searchButton">Search product</button>
+    <div id="resultsContainer"></div>
+
+    <form th:action="@{/store/addProduct}" method="get" style="margin-top: 20px;">
+      <button type="submit" name="add" th:text="'Add product to base'">Add Product</button>
+    </form>
+  </div>
+
+  <div>
+    <button id="showTableButton">Показать список товаров</button>
+    <div id="tableContainer">
+      <table>
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Product name</th>
+          <th>Price</th>
+          <th>Quantity</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${products}">
+          <td th:text="${item.id}"></td>
+          <td th:text="${item.name}"></td>
+          <td th:text="${item.price}"></td>
+          <td th:text="${item.quantity}"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
+
 <script>
   document.getElementById('showTableButton').addEventListener('click', function() {
     var tableContainer = document.getElementById('tableContainer');
-    if (tableContainer.style.display === 'none') {
-      tableContainer.style.display = 'block';
-    } else {
-      tableContainer.style.display = 'none';
-    }
+    tableContainer.style.display = (tableContainer.style.display === 'none' || tableContainer.style.display === '') ? 'block' : 'none';
+  });
+
+  // Дополнительный код для функции поиска
+  $(document).ready(function () {
+    $('#searchButton').click(function () {
+      const searchTerm = $('#searchInput').val();
+      $.ajax({
+        url: '/store/search',
+        type: 'GET',
+        data: { searchTerm: searchTerm },
+        success: function (response) {
+          let html = '<table><tr><th>ID</th><th>Product name</th><th>Price</th><th>Quantity</th></tr>';
+          response.forEach(item => {
+            html += `<tr><td>${item.id}</td><td>${item.name}</td><td>${item.price}</td><td>${item.quantity}</td></tr>`;
+          });
+          html += '</table>';
+          $('#resultsContainer').html(html);
+        },
+        error: function (xhr, status, error) {
+          console.error("Error: ", error);
+        }
+      });
+    });
   });
 </script>
-<form th:action="@{/store/addProduct}" method="get">
-  <button type="submit" name="add" th:text="'Add product to base'">Add USer</button>
-</form>
+
 </body>
 </html>
