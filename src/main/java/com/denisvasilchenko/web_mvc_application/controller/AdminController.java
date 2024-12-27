@@ -18,14 +18,14 @@ public class AdminController {
         model.addAttribute("allUsers", userService.findAllUsers());
         return "admin";
     }
-    @GetMapping("admin/addUser")
+    @GetMapping("/admin/addUser")
     public String showAddUserForm() {
         return "addUser";
     }
-    @PostMapping("admin/addUser")
-    public String addUserToDataBase(@RequestParam String username, @RequestParam String surname, @RequestParam Role role) {
+    @PostMapping("/admin/addUser")
+    public String addUserToDataBase(@RequestParam String username, @RequestParam String surname, @RequestParam String role, @RequestParam String password) {
         if(username!=null&&surname!=null&&role!=null) {
-            if(userService.saveUser(new User(username, surname, role))){return "redirect:/admin";}
+            if(userService.saveUser(new User(username, surname, role, password))){return "redirect:/admin";}
         }
         return "redirect:/admin/addUser";
     }
@@ -34,13 +34,13 @@ public class AdminController {
         userService.deleteUser(id);
         return "redirect:/admin";
     }
-    @PostMapping("admin/updateUser/{id}")
+    @PostMapping("/admin/updateUser/{id}")
     public String showFormToUpdate(@PathVariable int id, Model model) {
         User user = userService.findUserById(id);
         model.addAttribute("user", user);
         return "updateUser";
     }
-    @PostMapping("admin/updateUser")
+    @PostMapping("/admin/updateUser")
     public String updateUser(@ModelAttribute("user") User user) {
         userService.updateUser(user);
         return "redirect:/admin";
