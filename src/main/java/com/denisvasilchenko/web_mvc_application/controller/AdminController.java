@@ -1,6 +1,5 @@
 package com.denisvasilchenko.web_mvc_application.controller;
 
-import com.denisvasilchenko.web_mvc_application.entity.Role;
 import com.denisvasilchenko.web_mvc_application.entity.User;
 import com.denisvasilchenko.web_mvc_application.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

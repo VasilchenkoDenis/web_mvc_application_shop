@@ -15,7 +15,7 @@ public class Shop {
     @Autowired
     private ProductRepository productRepository;
 
-    public Sale createSale (List<Product> products, User user) throws Exception {
+    public Sale createSale (List<Product> products, User user) {
         for(Product product : products) {
             Product foundProduct = productRepository.findById(product.getId()).orElse(null);
             if (foundProduct != null) {

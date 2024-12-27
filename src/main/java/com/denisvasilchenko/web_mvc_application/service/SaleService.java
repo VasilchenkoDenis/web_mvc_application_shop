@@ -14,8 +14,7 @@ import java.util.List;
 public class SaleService {
     @Autowired
     private SaleRepository saleRepository;
-    @Autowired
-    private ProductRepository productRepository;
+
     @Autowired
     private Shop shop;
 
