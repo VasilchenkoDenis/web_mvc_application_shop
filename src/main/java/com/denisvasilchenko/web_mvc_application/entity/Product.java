@@ -17,6 +17,7 @@ public class Product {
     private double price;
     private double purchasePrice;
     private int quantity;
+    private boolean available;
 
     public Product() {
     }
@@ -34,6 +35,14 @@ public class Product {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 
     public @NotNull @Size(min = 2, message = "Not less than 2 symbols") String getName() {

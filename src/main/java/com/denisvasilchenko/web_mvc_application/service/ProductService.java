@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -23,6 +24,10 @@ public class ProductService {
         }
         productRepository.save(product);
         return true;
+    }
+    public Product findProductById(Long id) {
+        Optional<Product> product = productRepository.findById(id);
+        return product.orElse(null);
     }
 
     public Product findProductByName(String name) {
