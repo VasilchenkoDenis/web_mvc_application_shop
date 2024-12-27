@@ -13,28 +13,25 @@
       font-family: Arial, sans-serif;
     }
 
-    #searchContainer {
-      width: 30%;
-      display: flex;
-      flex-direction: column;
+    #searchContainer, #tableContainer, #selectedProductsContainer {
       padding: 20px;
       border: 1px solid #ccc;
       background-color: #f9f9f9;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
-      position: relative;
+      margin: 10px;
+      overflow: auto;
+    }
+
+    #searchContainer {
+      width: 30%;
     }
 
     #tableContainer {
-      display: none;
-      overflow: auto;
-      max-width: 70%;
-      height: 400px;
-      padding: 20px;
-      border: 1px solid #ccc;
-      background-color: #fff;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
+      width: 65%;
+      display: none; /* Скрыто по умолчанию, будет показано при нажатии кнопки */
+      max-height: 800px;
+      max-width: 600px;
     }
 
     table {
@@ -47,6 +44,7 @@
       border: 1px solid #ddd;
       padding: 8px;
       text-align: left;
+      cursor: pointer; /* Курсор указателя для интерактивных строк */
     }
 
     th {
@@ -57,6 +55,25 @@
       display: flex;
       justify-content: space-between;
       width: 100%;
+      flex-wrap: wrap;
+    }
+
+    /* Стили для отображения выбранных товаров */
+    #selectedProductsContainer {
+      display: flex; /* Используем Flexbox для центрирования */
+      justify-content: center; /* Центрирование по горизонтали */
+      align-items: center; /* Центрирование по вертикали */
+      margin: 0 auto; /* Автоматические отступы для центрирования */
+      width: 65%; /* Ширина контейнера */
+      max-height: 800px;
+      max-width: 600px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      display: block;
+      /* Убедитесь, что контейнер для выбранных товаров видим */
     }
   </style>
 </head>
@@ -69,9 +86,26 @@
     <button id="searchButton">Search product</button>
     <div id="resultsContainer"></div>
 
-    <form th:action="@{/store/addProduct}" method="get" style="margin-top: 20px;">
-      <button type="submit" name="add" th:text="'Add product to base'">Add Product</button>
+    <form action="/store/addProduct" method="get" style="margin-top: 20px;">
+      <button type="submit" name="add">Add Product</button>
     </form>
+  </div>
+  <div id="selectedProductsContainer">
+    <h2>Selected Products</h2>
+    <table id="selectedProductsTable">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Product name</th>
+        <th>Price</th>
+        <th>Quantity</th>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- Выбранные товары будут добавлены сюда -->
+      </tbody>
+    </table>
+    <button id="sellProducts">Продать</button>
   </div>
 
   <div>
@@ -87,7 +121,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="item : ${products}">
+        <tr th:each="item : ${products}" class="clickable-row">
           <td th:text="${item.id}"></td>
           <td th:text="${item.name}"></td>
           <td th:text="${item.price}"></td>
@@ -100,6 +134,7 @@
 </div>
 
 <script>
+  // Показать или скрыть список товаров
   document.getElementById('showTableButton').addEventListener('click', function() {
     var tableContainer = document.getElementById('tableContainer');
     tableContainer.style.display = (tableContainer.style.display === 'none' || tableContainer.style.display === '') ? 'block' : 'none';
@@ -116,15 +151,87 @@
         success: function (response) {
           let html = '<table><tr><th>ID</th><th>Product name</th><th>Price</th><th>Quantity</th></tr>';
           response.forEach(item => {
-            html += `<tr><td>${item.id}</td><td>${item.name}</td><td>${item.price}</td><td>${item.quantity}</td></tr>`;
+            html += `<tr class="clickable-row"><td>${item.id}</td><td>${item.name}</td><td>${item.price}</td><td>${item.quantity}</td></tr>`;
           });
           html += '</table>';
           $('#resultsContainer').html(html);
+          // Удалить дублирующийся обработчик
+          // Теперь он уже добавлен универсальным обработчиком событий
         },
         error: function (xhr, status, error) {
           console.error("Error: ", error);
         }
       });
+    });
+
+    // Обработчик клика для строк таблицы
+    $(document).on('click', '.clickable-row', function() {
+      addToSelectedProducts($(this));
+    });
+
+    function addToSelectedProducts(row) {
+      var id = row.find('td').eq(0).text();
+      var name = row.find('td').eq(1).text();
+      var price = row.find('td').eq(2).text();
+      var quantity = row.find('td').eq(3).text();
+
+      // Проверяем на дублирование
+      var exists = false;
+      $('#selectedProductsTable tbody tr').each(function() {
+        if ($(this).find('td').eq(0).text() === id) {
+          exists = true;
+          return false; // Прерываем цикл
+        }
+      });
+
+      if (!exists) {
+        // Добавляем строку в таблицу "Выбранные товары" с количеством по умолчанию равным 1
+        $('#selectedProductsTable tbody').append(`
+        <tr data-id="${id}">
+            <td>${id}</td>
+            <td>${name}</td>
+            <td>${price}</td>
+            <td><input type="number" class="quantity-input" value="1" min="1" /></td> <!-- Поле ввода для количества -->
+            <td><button class="remove-product">Удалить</button></td> <!-- Кнопка для удаления товара -->
+        </tr>
+    `);
+      } else {
+        alert("Этот товар уже добавлен в выбранные товары.");
+      }
+
+// Обработчик события для кнопки удаления товара
+      $(document).on('click', '.remove-product', function () {
+        $(this).closest('tr').remove(); // Удаляем строку из таблицы
+      });
+    }
+  });
+  $(document).on('click', '#sellProducts', function () {
+    const products = [];
+
+    // Проходим по каждой строке таблицы
+    $('#selectedProductsTable tbody tr').each(function () {
+      const id = $(this).data('id'); // Получаем ID товара
+      const name = $(this).find('td:nth-child(2)').text(); // Получаем название товара
+      const price = $(this).find('td:nth-child(3)').text(); // Получаем цену товара
+      const quantity = $(this).find('.quantity-input').val(); // Получаем количество товара
+
+      // Добавляем товар в массив
+      products.push({ id, name, price, quantity });
+    });
+
+    // Отправляем данные на сервер
+    $.ajax({
+      url: '/store/sell', // URL вашего сервера
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(products),
+      success: function (response) {
+        alert('Товары успешно проданы!');
+        // Здесь можно добавить логику для очистки таблицы или обновления интерфейса
+      },
+      error: function (error) {
+        alert('Произошла ошибка при продаже товаров.');
+      }
     });
   });
 </script>
