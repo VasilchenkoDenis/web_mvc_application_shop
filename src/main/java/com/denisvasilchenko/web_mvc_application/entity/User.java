@@ -13,25 +13,22 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name="user_name")
     @Size(min=2, message = "Not less then 2 symbols")
     @NotNull
     private String name;
     @Size(min=2, message = "Not less than 2 symbols")
     private String surname;
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
-    @Enumerated(EnumType.STRING)
-    private Set<Role> roles;
+    private String password;
+    private String role;
 
     public User() {
     }
 
-    public User(String name, String surname, Role role) {
+    public User(String name, String surname, String role, String password) {
         this.name = name;
         this.surname = surname;
-        this.roles = new HashSet<>();
-        roles.add(role);
+        this.password = password;
+        this.role = role;
     }
 
     public int getId() {
@@ -40,6 +37,14 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public @Size(min = 2, message = "Not less then 2 symbols") String getName() {
@@ -58,11 +63,11 @@ public class User {
         this.surname = surname;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public String getRole() {
+        return role;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setRole(String role) {
+        this.role = role;
     }
 }
