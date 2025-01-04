@@ -11,13 +11,10 @@ import java.util.List;
 
 @Component
 public class SaleReport {
-    private List<Sale> sales;
+
     @Autowired
     private SaleService saleService;
 
-    public SaleReport(List<Sale> sales) {
-        this.sales = sales;
-    }
 
     public String getDailySalesAmount (){
         List<Sale> sales = saleService.getSalesPerDay(LocalDate.now());
