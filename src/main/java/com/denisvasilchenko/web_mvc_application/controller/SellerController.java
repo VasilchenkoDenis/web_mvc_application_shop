@@ -1,6 +1,7 @@
 package com.denisvasilchenko.web_mvc_application.controller;
 
 import com.denisvasilchenko.web_mvc_application.entity.Product;
+import com.denisvasilchenko.web_mvc_application.reports.SaleReport;
 import com.denisvasilchenko.web_mvc_application.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,10 +17,14 @@ public class SellerController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private SaleReport saleReport;
+
     @GetMapping("/store")
     @PreAuthorize("hasAuthority('ROLE_SELLER')")
     public String showStore(Model model) {
         model.addAttribute("products", productService.findAll());
+        model.addAttribute("dailySalesAmount", saleReport.getDailySalesAmount());
         return "store";
     }
 
