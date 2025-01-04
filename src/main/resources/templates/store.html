@@ -13,7 +13,7 @@
       font-family: Arial, sans-serif;
     }
 
-    #searchContainer, #tableContainer, #selectedProductsContainer {
+    #searchContainer, #dailyReportContainer, #tableContainer, #selectedProductsContainer {
       padding: 20px;
       border: 1px solid #ccc;
       background-color: #f9f9f9;
@@ -23,7 +23,7 @@
       overflow: auto;
     }
 
-    #searchContainer {
+    #searchContainer, #dailyReportContainer {
       width: 30%;
     }
 
@@ -89,6 +89,10 @@
     <form action="/store/addProduct" method="get" style="margin-top: 20px;">
       <button type="submit" name="add">Add Product</button>
     </form>
+    <div id="dailyReportContainer">
+      <h2>Sales per day:</h2>
+      <p th:text="${dailySalesAmount}">No data available</p>
+    </div>
   </div>
   <div id="selectedProductsContainer">
     <h2>Selected Products</h2>
