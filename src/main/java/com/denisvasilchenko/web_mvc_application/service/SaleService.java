@@ -20,7 +20,7 @@ public class SaleService {
     @Autowired
     private Shop shop;
 
-    public void addSale(List<Product> products, User user) throws Exception {
+    public void addSale(List<Product> products, User user){
         saleRepository.save(shop.createSale(products, user));
     }
     public List<Sale> getSalesPerDay(LocalDate saleDate) {
