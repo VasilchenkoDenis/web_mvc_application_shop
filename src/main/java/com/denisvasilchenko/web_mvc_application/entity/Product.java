@@ -27,6 +27,7 @@ public class Product {
         this.price = price;
         this.purchasePrice = purchasePrice;
         this.quantity = quantity;
+        this.available = true;
     }
 
     public Long getId() {
