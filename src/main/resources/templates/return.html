@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales and Returns</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .table-container {
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin: 10px;
+            overflow: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            justify-content: flex-end;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .total {
+            text-align: right;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="table-container">
+    <h3>Sales Table</h3>
+
+    <label for="date">Select date:</label>
+    <input type="date" id="date" name="date">
+    <button id="fetchSales">Get sales</button>
+
+    <table>
+        <thead>
+        <tr>
+            <th style="width: 150px;">Date and Time</th>
+            <th style="width: 150px;">Product Name</th>
+            <th style="width: 100px;">Price</th>
+            <th style="width: 100px;">Quantity</th>
+        </tr>
+        </thead>
+        <tbody id="salesTableBody">
+        </tbody>
+    </table>
+    <div class="total">Total: <span id="totalAmount">0</span></div>
+</div>
+
+<script>
+    document.getElementById('fetchSales').addEventListener('click', function () {
+        const selectedDate = document.getElementById('date').value;
+
+        if (!selectedDate) {
+            alert('Please, select date.');
+            return;
+        }
+
+        fetch('/store/salesList', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: selectedDate,
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Обновление таблицы с данными о продажах
+                const salesTableBody = document.getElementById('salesTableBody');
+                salesTableBody.innerHTML = ''; // Очистка предыдущих данных
+
+                data.forEach(sale => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+          <td>${sale.saleDateTime}</td>
+          <td colspan="3">
+            <table>
+              ${sale.products.map(product => `
+                <tr>
+                  <td>${product.product.name}</td>
+                  <td>${product.product.price}</td>
+                  <td>${product.quantity}</td>
+                </tr>
+              `).join('')}
+            </table>
+          </td>
+          <td>
+            <button class="returnButton" data-sale-id="${sale.id}">Return</button>
+          </td>
+        `;
+                    salesTableBody.appendChild(row);
+                });
+                document.querySelectorAll('.returnButton').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const saleId = this.getAttribute('data-sale-id');
+                        // Отправка запроса на возврат
+                        fetch('/store/returnSale', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: saleId,
+                        })
+                            .then(response => response.text())
+                            .then(result => {
+                                alert('Return successful: ' + result);
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                    });
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+</script>
+
+</body>
+</html>
