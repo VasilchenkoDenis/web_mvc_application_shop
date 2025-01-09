@@ -6,15 +6,15 @@ import jakarta.validation.constraints.Size;
 
 
 @Entity
-@Table(name="user")
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Size(min=2, message = "Not less then 2 symbols")
+    @Size(min = 2, message = "Not less then 2 symbols")
     @NotNull
     private String name;
-    @Size(min=2, message = "Not less than 2 symbols")
+    @Size(min = 2, message = "Not less than 2 symbols")
     private String surname;
     private String password;
     private String role;
