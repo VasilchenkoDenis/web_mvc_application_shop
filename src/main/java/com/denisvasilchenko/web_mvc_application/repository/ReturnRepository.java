@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface ReturnRepository extends JpaRepository<Return, Long> {
 
-    public List<Return> findAllByReturnDateTimeBetween(LocalDateTime from, LocalDateTime to);
+    List<Return> findAllByReturnDateTimeBetween(LocalDateTime from, LocalDateTime to);
 }
