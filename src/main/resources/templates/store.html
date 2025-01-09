@@ -1,243 +1,271 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Product Management</title>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <style>
-    body {
-      display: flex;
-      height: 100vh;
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
 
-    #searchContainer, #dailyReportContainer, #tableContainer, #selectedProductsContainer {
-      padding: 20px;
-      border: 1px solid #ccc;
-      background-color: #f9f9f9;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
-      margin: 10px;
-      overflow: auto;
-    }
+        #searchContainer, #dailyReportContainer, #tableContainer, #selectedProductsContainer {
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin: 10px;
+            overflow: auto;
+        }
 
-    #searchContainer, #dailyReportContainer {
-      width: 30%;
-    }
+        #searchContainer, #dailyReportContainer {
+            width: 30%;
+        }
 
-    #tableContainer {
-      width: 65%;
-      display: none; /* Скрыто по умолчанию, будет показано при нажатии кнопки */
-      max-height: 800px;
-      max-width: 600px;
-    }
+        #tableContainer {
+            width: 65%;
+            display: none;
+            max-height: 800px;
+            max-width: 600px;
+        }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
 
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
-      cursor: pointer; /* Курсор указателя для интерактивных строк */
-    }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            cursor: pointer;
+        }
 
-    th {
-      background-color: #f2f2f2;
-    }
+        th {
+            background-color: #f2f2f2;
+        }
 
-    .container {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      flex-wrap: wrap;
-    }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            flex-wrap: wrap;
+        }
 
-    /* Стили для отображения выбранных товаров */
-    #selectedProductsContainer {
-      display: flex; /* Используем Flexbox для центрирования */
-      justify-content: center; /* Центрирование по горизонтали */
-      align-items: center; /* Центрирование по вертикали */
-      margin: 0 auto; /* Автоматические отступы для центрирования */
-      width: 65%; /* Ширина контейнера */
-      max-height: 800px;
-      max-width: 600px;
-      padding: 20px;
-      border: 1px solid #ccc;
-      background-color: #f9f9f9;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
-      display: block;
-      /* Убедитесь, что контейнер для выбранных товаров видим */
-    }
-  </style>
+
+        #selectedProductsContainer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            width: 65%;
+            max-height: 800px;
+            max-width: 600px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            display: block;
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
-  <div id="searchContainer">
-    <h1>Search product</h1>
-    <input type="text" id="searchInput" placeholder="Введите название товара">
-    <button id="searchButton">Search product</button>
-    <div id="resultsContainer"></div>
+    <div id="searchContainer">
+        <h1>Search product</h1>
+        <input type="text" id="searchInput" placeholder="Введите название товара">
+        <button id="searchButton">Search product</button>
+        <div id="resultsContainer"></div>
 
-    <form action="/store/addProduct" method="get" style="margin-top: 20px;">
-      <button type="submit" name="add">Add Product</button>
-    </form>
-    <div id="dailyReportContainer">
-      <h2>Sales per day:</h2>
-      <p th:text="${dailySalesAmount}">No data available</p>
+        <form action="/store/addProduct" method="get" style="margin-top: 20px;">
+            <button type="submit" name="add">Add Product</button>
+        </form>
+        <div id="dailyReportContainer">
+            <h2>Sales per day:</h2>
+            <p th:text="${dailySalesAmount}">No data available</p>
+        </div>
     </div>
-  </div>
-  <div id="selectedProductsContainer">
-    <h2>Selected Products</h2>
-    <table id="selectedProductsTable">
-      <thead>
-      <tr>
-        <th>ID</th>
-        <th>Product name</th>
-        <th>Price</th>
-        <th>Quantity</th>
-      </tr>
-      </thead>
-      <tbody>
-      <!-- Выбранные товары будут добавлены сюда -->
-      </tbody>
-    </table>
-    <button id="sellProducts">Продать</button>
-  </div>
+    <div id="selectedProductsContainer">
+        <h2>Selected Products</h2>
+        <table id="selectedProductsTable">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Product name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Выбранные товары будут добавлены сюда -->
+            </tbody>
+        </table>
+        <button id="sellProducts">Sell</button>
+    </div>
 
-  <div>
-    <button id="showTableButton">Показать список товаров</button>
-    <div id="tableContainer">
-      <table>
-        <thead>
-        <tr>
-          <th>ID</th>
-          <th>Product name</th>
-          <th>Price</th>
-          <th>Quantity</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="item : ${products}" class="clickable-row">
-          <td th:text="${item.id}"></td>
-          <td th:text="${item.name}"></td>
-          <td th:text="${item.price}"></td>
-          <td th:text="${item.quantity}"></td>
-        </tr>
-        </tbody>
-      </table>
+    <div>
+        <button id="showTableButton">Show product list</button>
+        <div id="tableContainer">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Product name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${products}" class="clickable-row">
+                    <td th:text="${item.id}"></td>
+                    <td th:text="${item.name}"></td>
+                    <td th:text="${item.price}"></td>
+                    <td th:text="${item.quantity}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <form th:action="@{/store/return}" method="get">
+            <button type="submit" name="Return form" th:text="'Return Form'">Return form</button>
+        </form>
+        <form th:action="@{/store/closeForm}" method="get">
+            <button type="submit" name="Close the store" th:text="'Close the store'">Close the store</button>
+        </form>
     </div>
-  </div>
 </div>
 
 <script>
-  // Показать или скрыть список товаров
-  document.getElementById('showTableButton').addEventListener('click', function() {
-    var tableContainer = document.getElementById('tableContainer');
-    tableContainer.style.display = (tableContainer.style.display === 'none' || tableContainer.style.display === '') ? 'block' : 'none';
-  });
-
-  // Дополнительный код для функции поиска
-  $(document).ready(function () {
-    $('#searchButton').click(function () {
-      const searchTerm = $('#searchInput').val();
-      $.ajax({
-        url: '/store/search',
-        type: 'GET',
-        data: { searchTerm: searchTerm },
-        success: function (response) {
-          let html = '<table><tr><th>ID</th><th>Product name</th><th>Price</th><th>Quantity</th></tr>';
-          response.forEach(item => {
-            html += `<tr class="clickable-row"><td>${item.id}</td><td>${item.name}</td><td>${item.price}</td><td>${item.quantity}</td></tr>`;
-          });
-          html += '</table>';
-          $('#resultsContainer').html(html);
-          // Удалить дублирующийся обработчик
-          // Теперь он уже добавлен универсальным обработчиком событий
-        },
-        error: function (xhr, status, error) {
-          console.error("Error: ", error);
-        }
-      });
+    // Показать или скрыть список товаров
+    document.getElementById('showTableButton').addEventListener('click', function () {
+        var tableContainer = document.getElementById('tableContainer');
+        tableContainer.style.display = (tableContainer.style.display === 'none' || tableContainer.style.display === '') ? 'block' : 'none';
     });
 
-    // Обработчик клика для строк таблицы
-    $(document).on('click', '.clickable-row', function() {
-      addToSelectedProducts($(this));
-    });
+    // Поиск
+    $(document).ready(function () {
+        $('#searchButton').click(function () {
+            const searchTerm = $('#searchInput').val();
+            $.ajax({
+                url: '/store/search',
+                type: 'GET',
+                data: {searchTerm: searchTerm},
+                success: function (response) {
+                    let html = '<table><tr><th>ID</th><th>Product name</th><th>Price</th><th>Quantity</th><th>Available</th></tr>';
+                    let outOfStockMessage = '';
+                    if (Array.isArray(response)) {
+                        response.forEach(item => {
+                            if (item.available) {
+                                html += `<tr class="clickable-row"><td>${item.id}</td><td>${item.name}</td><td>${item.price}</td><td>${item.quantity}</td><td>${item.available}</td></tr>`;
+                            } else if (!item.available) {
+                                outOfStockMessage = `Внимание: Товар "${item.name}" закончился!`;
+                            }
+                        });
+                    }
+                    html += '</table>';
+                    $('#resultsContainer').html(html);
+                    if (outOfStockMessage) {
+                        $('#resultsContainer').append(`<div style="color: red;">${outOfStockMessage}</div>`);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    if (xhr.status === 404) {
+                        const errorResponse = xhr.responseJSON; // Получаем JSON-ответ
+                        let html = '<table><tr><th>ID</th><th>Product name</th><th>Price</th><th>Quantity</th><th>Available</th></tr>';
 
-    function addToSelectedProducts(row) {
-      var id = row.find('td').eq(0).text();
-      var name = row.find('td').eq(1).text();
-      var price = row.find('td').eq(2).text();
-      var quantity = row.find('td').eq(3).text();
+                        // Обработка похожих товаров
+                        if (errorResponse && errorResponse.similarProducts) {
+                            errorResponse.similarProducts.forEach(item => {
+                                html += `<tr><td>${item.id}</td><td>${item.name}</td><td>${item.price}</td><td>${item.quantity}</td><td>${item.available}</td></tr>`;
+                            });
+                        }
 
-      // Проверяем на дублирование
-      var exists = false;
-      $('#selectedProductsTable tbody tr').each(function() {
-        if ($(this).find('td').eq(0).text() === id) {
-          exists = true;
-          return false; // Прерываем цикл
-        }
-      });
+                        html += '</table>';
+                        $('#resultsContainer').html(`<div style="color: red;">${errorResponse.message}</div>` + html);
+                    } else {
+                        console.error("Error: ", error);
+                    }
+                }
+            });
+        });
 
-      if (!exists) {
-        // Добавляем строку в таблицу "Выбранные товары" с количеством по умолчанию равным 1
-        $('#selectedProductsTable tbody').append(`
+        // Обработчик клика для строк таблицы
+        $(document).on('click', '.clickable-row', function () {
+            addToSelectedProducts($(this));
+        });
+
+        function addToSelectedProducts(row) {
+            var id = row.find('td').eq(0).text();
+            var name = row.find('td').eq(1).text();
+            var price = row.find('td').eq(2).text();
+            var quantity = row.find('td').eq(3).text();
+
+            // Проверка на дублирование
+            var exists = false;
+            $('#selectedProductsTable tbody tr').each(function () {
+                if ($(this).find('td').eq(0).text() === id) {
+                    exists = true;
+                    return false;
+                }
+            });
+
+            if (!exists) {
+                // Добавление строки в таблицу "Selected products" с количеством по умолчанию равным 1
+                $('#selectedProductsTable tbody').append(`
         <tr data-id="${id}">
             <td>${id}</td>
             <td>${name}</td>
             <td>${price}</td>
             <td><input type="number" class="quantity-input" value="1" min="1" /></td> <!-- Поле ввода для количества -->
-            <td><button class="remove-product">Удалить</button></td> <!-- Кнопка для удаления товара -->
+            <td><button class="remove-product">Delete</button></td> <!-- Кнопка для удаления товара -->
         </tr>
     `);
-      } else {
-        alert("Этот товар уже добавлен в выбранные товары.");
-      }
+            } else {
+                alert("This product has already been added to your selected products.");
+            }
 
 // Обработчик события для кнопки удаления товара
-      $(document).on('click', '.remove-product', function () {
-        $(this).closest('tr').remove(); // Удаляем строку из таблицы
-      });
-    }
-  });
-  $(document).on('click', '#sellProducts', function () {
-    const products = [];
-
-    // Проходим по каждой строке таблицы
-    $('#selectedProductsTable tbody tr').each(function () {
-      const id = $(this).data('id'); // Получаем ID товара
-      const name = $(this).find('td:nth-child(2)').text(); // Получаем название товара
-      const price = $(this).find('td:nth-child(3)').text(); // Получаем цену товара
-      const quantity = $(this).find('.quantity-input').val(); // Получаем количество товара
-
-      // Добавляем товар в массив
-      products.push({ id, name, price, quantity });
+            $(document).on('click', '.remove-product', function () {
+                $(this).closest('tr').remove(); // Удаляем строку из таблицы
+            });
+        }
     });
+    $(document).on('click', '#sellProducts', function () {
+        const products = [];
 
-    // Отправляем данные на сервер
-    $.ajax({
-      url: '/store/sell', // URL вашего сервера
-      method: 'POST',
-      contentType: 'application/json',
-      data: JSON.stringify(products),
-      success: function (response) {
-        alert('Товары успешно проданы!');
-        // Здесь можно добавить логику для очистки таблицы или обновления интерфейса
-      },
-      error: function (error) {
-        alert('Произошла ошибка при продаже товаров.');
-      }
+        // Цикл каждой строке таблицы
+        $('#selectedProductsTable tbody tr').each(function () {
+            const id = $(this).data('id');
+            const name = $(this).find('td:nth-child(2)').text();
+            const price = $(this).find('td:nth-child(3)').text();
+            const quantity = $(this).find('.quantity-input').val();
+
+            // Добавление товара в массив
+            products.push({id, name, price, quantity});
+        });
+
+        // Отправка запроса на сервер
+        $.ajax({
+            url: '/store/sell',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(products),
+            success: function (response) {
+                alert('Products successfully sold!');
+
+            },
+            error: function (error) {
+                alert('An error occurred while selling the goods.');
+            }
+        });
     });
-  });
 </script>
 
 </body>
