@@ -11,18 +11,19 @@ public class Sale {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name="sale_date_time")
+    @Column(name = "sale_date_time")
     private LocalDateTime saleDateTime;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
     @ManyToMany
-    private List<Product> products;
+    private List<ProductQuantity> products;
+    private boolean isReturned;
 
     public Sale() {
     }
 
-    public Sale(LocalDateTime saleDateTime, User user, List<Product> products) {
+    public Sale(LocalDateTime saleDateTime, User user, List<ProductQuantity> products) {
         this.saleDateTime = saleDateTime;
         this.user = user;
         this.products = products;
@@ -52,11 +53,19 @@ public class Sale {
         this.user = user;
     }
 
-    public List<Product> getProducts() {
+    public List<ProductQuantity> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(List<ProductQuantity> products) {
         this.products = products;
+    }
+
+    public boolean isReturned() {
+        return isReturned;
+    }
+
+    public void setReturned(boolean returned) {
+        isReturned = returned;
     }
 }
