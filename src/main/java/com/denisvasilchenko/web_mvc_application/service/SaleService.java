@@ -20,10 +20,15 @@ public class SaleService {
     @Autowired
     private Shop shop;
 
-    public void addSale(List<Product> products, User user){
+    public void addSale(List<Product> products, User user) {
         saleRepository.save(shop.createSale(products, user));
     }
+
     public List<Sale> getSalesPerDay(LocalDate saleDate) {
         return saleRepository.findAllBySaleDateTimeBetween(saleDate.atStartOfDay(), saleDate.atTime(LocalTime.MAX));
+    }
+
+    public Sale getSale(long id) {
+        return saleRepository.findById(id);
     }
 }
