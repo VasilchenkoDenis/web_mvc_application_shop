@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class Shop {
 
-    private boolean isOpen = true;
+    private final boolean isOpen = true;
 
     @Autowired
     private ProductRepository productRepository;
