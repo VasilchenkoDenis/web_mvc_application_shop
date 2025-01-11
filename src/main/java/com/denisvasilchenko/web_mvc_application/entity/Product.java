@@ -8,6 +8,8 @@ import jakarta.validation.constraints.Size;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //зачем product_id? таблица уже называется products
+    //такие имена id вводят в заблуждения потому что обычно означают что это внешний ключ к другой таблице
     @Column(name = "product_id")
     private Long id;
     @Column(name = "name")

@@ -9,7 +9,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+//где этот класс использутеся? если только для конфига то лучше перенести в пакет config
 public class MyUserDetails implements UserDetails {
+
     private final User user;
 
     public MyUserDetails(User user) {

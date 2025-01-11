@@ -15,6 +15,8 @@ public class AdminController {
 
     @GetMapping("/admin")
     public String showAllUsers(Model model) {
+        //тут и во всех других похожих местах, ты возвращаешь Entity на фронт, так не делается
+        //почитай что такой Data Transfer Object (еще называют DTO)
         model.addAttribute("allUsers", userService.findAllUsers());
         return "admin";
     }
