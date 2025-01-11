@@ -14,6 +14,7 @@ public class Return {
     private LocalDateTime returnDateTime;
     @ManyToOne
     private User user;
+    //будет более правильно назвать originalSale
     @ManyToOne
     private Sale sale;
 

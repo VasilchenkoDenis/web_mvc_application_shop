@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.util.List;
 
+//нет смысла иметь отдельный класс для этого, лучше поместить логику в ReturnService
 @Component
 public class ReturnReport {
 

@@ -11,6 +11,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+    насколько я вижу твои классы SaleService/UserService и прочее ничего не делают
+    кроме того что вызывают repository
+    будет правильно удалить этот класс shop и логику createSale поместить в SaleService
+    а createReturn в return service
+ */
 @Component
 public class Shop {
 
@@ -26,6 +32,14 @@ public class Shop {
     public Sale createSale(List<Product> products, User user) {
         List<ProductQuantity> productQuantities = new ArrayList<>();
         for (Product product : products) {
+            //todo .orElse(null) грубая ошибка, так нельзя писать
+            /*
+                вместо этого просто
+                Product product = productRepository.findById(product.getId())
+                    .orElseThrow(() -> throw new RuntimeException("Product not found"))
+
+                    и дальше уже не нужно проверять null
+             */
             Product foundProduct = productRepository.findById(product.getId()).orElse(null);
             if (foundProduct != null) {
                 foundProduct.setQuantity(foundProduct.getQuantity() - product.getQuantity());
@@ -37,6 +51,7 @@ public class Shop {
                 }
                 productRepository.save(foundProduct);
             } else {
+                //у тебя уже есть UsernameNotFoundException, сделай по аналогии ProductNotFoundException
                 throw new RuntimeException("Product not found");
             }
         }
@@ -46,6 +61,8 @@ public class Shop {
     public Return createReturn(Sale sale, User user) {
         List<ProductQuantity> productQuantities = sale.getProducts();
         for (ProductQuantity pq : productQuantities) {
+            //у тебя уже есть продукт Product product = pq.getProduct();
+            //зачем еще раз доставать из базы?
             Product foundProduct = productService.findProductById(pq.getProduct().getId());
             foundProduct.setQuantity(foundProduct.getQuantity() + pq.getQuantity());
             productService.saveProduct(foundProduct);

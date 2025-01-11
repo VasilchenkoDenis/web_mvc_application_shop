@@ -17,6 +17,7 @@ public class User {
     @Size(min = 2, message = "Not less than 2 symbols")
     private String surname;
     private String password;
+    //скорей всего тут нужно использовать enum Role вместо String
     private String role;
 
     public User() {

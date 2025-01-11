@@ -1,3 +1,4 @@
+//todo символ _ не используется в названии пакетов
 package com.denisvasilchenko.web_mvc_application;
 
 import org.springframework.boot.SpringApplication;

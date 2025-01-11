@@ -12,12 +12,16 @@ public class Sale {
     @Column(name = "id")
     private Long id;
     @Column(name = "sale_date_time")
+    //можно назвать createdDate, то есть дата создания Sale будте более аккуратнее
+    //потому что у тебя уже сущность называется Sale, зачем опять это писать
     private LocalDateTime saleDateTime;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
     @ManyToMany
     private List<ProductQuantity> products;
+    //советую ввести enum SaleState которое будет иметь состояния типа NEW, PAID, RETURNED
+    //когда клиент только пытается купить то создается в NEW, после оплаты PAID, если запрошен возврат то RETURNED
     private boolean isReturned;
 
     public Sale() {
@@ -53,6 +57,7 @@ public class Sale {
         this.user = user;
     }
 
+    //почему getProduct если возвращается getProductQuantity
     public List<ProductQuantity> getProducts() {
         return products;
     }

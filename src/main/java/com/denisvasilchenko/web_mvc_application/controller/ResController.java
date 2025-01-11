@@ -64,6 +64,13 @@ public class ResController {
         }
     }
 
+    //как я уже упоминал попробуй сделать все эндпоинты в стиле REST
+    //GET /sales - возвращает все продажи
+    //POST /sales - создает sale
+    //POST /returns - создает Return
+    //и так далее, например здесь ты ищешь sales но используешь Post, это неверно и сразу бросается в глаза
+
+    //обрати внимание на другие ендпоинты тоже (в этом классе и других Controller
     @PostMapping("/store/salesList")
     @PreAuthorize("hasAuthority('ROLE_SELLER')")
     public ResponseEntity<List<Sale>> showSalePerDate(@RequestBody String date) {
