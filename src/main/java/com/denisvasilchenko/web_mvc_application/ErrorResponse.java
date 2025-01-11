@@ -8,6 +8,7 @@ public class ErrorResponse {
     private String message;
     private List<Product> similarProducts;
 
+    //todo комментарий
     public ErrorResponse(String message, List<Product> similarProducts) {
         this.message = message;
         this.similarProducts = similarProducts;
