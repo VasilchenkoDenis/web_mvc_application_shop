@@ -76,12 +76,11 @@
             return;
         }
 
-        fetch('/store/salesList', {
-            method: 'POST',
+        fetch(`/api/sales/${selectedDate}`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: selectedDate,
         })
             .then(response => response.json())
             .then(data => {
