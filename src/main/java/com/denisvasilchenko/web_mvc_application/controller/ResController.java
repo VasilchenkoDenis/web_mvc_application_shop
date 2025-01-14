@@ -68,15 +68,13 @@ public class ResController {
     @GetMapping("/sales/{selectedDate}")
     @PreAuthorize("hasAuthority('ROLE_SELLER')")
     public ResponseEntity<List<Sale>> getSalesByDate(@PathVariable String selectedDate) {
-        System.out.println(selectedDate);
         List<Sale> sales = saleService.getSalesPerDay(LocalDate.parse(selectedDate));
         return ResponseEntity.ok(sales);
     }
 
     @PostMapping("/returns")
-//    @PreAuthorize("hasAuthority('ROLE_SELLER')")
+    @PreAuthorize("hasAuthority('ROLE_SELLER')")
     public ResponseEntity<String> addReturn(@RequestBody Sale sale) {
-//        Sale sale = saleService.getSale(Long.parseLong(id));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userService.findUserByName(username);
