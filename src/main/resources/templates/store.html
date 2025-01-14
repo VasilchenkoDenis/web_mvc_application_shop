@@ -60,7 +60,7 @@
 
 
         #selectedProductsContainer {
-            display: flex;
+            /*display: flex;*/
             justify-content: center;
             align-items: center;
             margin: 0 auto;
@@ -81,6 +81,7 @@
 <div class="container">
     <div id="searchContainer">
         <h1>Search product</h1>
+        <label for="searchInput"></label>
         <input type="text" id="searchInput" placeholder="Введите название товара">
         <button id="searchButton">Search product</button>
         <div id="resultsContainer"></div>
@@ -172,9 +173,10 @@
                         });
                     }
                     html += '</table>';
-                    $('#resultsContainer').html(html);
+                    const resultsContainer = $('#resultsContainer');
+                    resultsContainer.html(html);
                     if (outOfStockMessage) {
-                        $('#resultsContainer').append(`<div style="color: red;">${outOfStockMessage}</div>`);
+                        resultsContainer.append(`<div style="color: red;">${outOfStockMessage}</div>`);
                     }
                 },
                 error: function (xhr, status, error) {
@@ -207,7 +209,7 @@
             var id = row.find('td').eq(0).text();
             var name = row.find('td').eq(1).text();
             var price = row.find('td').eq(2).text();
-            var quantity = row.find('td').eq(3).text();
+            // var quantity = row.find('td').eq(3).text();
 
             // Проверка на дублирование
             var exists = false;
