@@ -256,7 +256,7 @@
             products.push({id, name, price, quantity});
         });
 
-        // Отправка запроса на сервер
+        // Отправка запроса на продажу товаров
         $.ajax({
             url: 'api/sales',
             method: 'POST',
@@ -269,11 +269,11 @@
             error: function (jqXHR) {
                 // Обработка ошибок
                 if (jqXHR.status === 400) {
-                    alert('Ошибка: ' + jqXHR.responseText); // Плохие данные
+                    alert('Ошибка: ' + jqXHR.responseText);
                 } else if (jqXHR.status === 500) {
-                    alert('Ошибка сервера: ' + jqXHR.responseText); // Ошибка сервера
+                    alert('Ошибка сервера: ' + jqXHR.responseText);
                 } else {
-                    alert('Произошла ошибка: ' + jqXHR.statusText); // Другие ошибки
+                    alert('Произошла ошибка: ' + jqXHR.statusText);
                 }
             }
         });
