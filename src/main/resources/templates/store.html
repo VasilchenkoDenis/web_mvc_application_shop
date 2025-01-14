@@ -154,9 +154,11 @@
         $('#searchButton').click(function () {
             const searchTerm = $('#searchInput').val();
             $.ajax({
-                url: '/store/search',
+                url: `/api/products/${searchTerm}`,
                 type: 'GET',
-                data: {searchTerm: searchTerm},
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 success: function (response) {
                     let html = '<table><tr><th>ID</th><th>Product name</th><th>Price</th><th>Quantity</th><th>Available</th></tr>';
                     let outOfStockMessage = '';
@@ -253,7 +255,7 @@
 
         // Отправка запроса на сервер
         $.ajax({
-            url: '/store/sell',
+            url: 'api/sales',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(products),
