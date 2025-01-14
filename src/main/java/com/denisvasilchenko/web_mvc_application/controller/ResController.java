@@ -90,6 +90,43 @@ public class ResController {
         }
 
     }
+    @DeleteMapping("/users/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<String> deleteUser(@PathVariable int id) {
+        if(userService.findUserById(id) == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with id " + id + " not found.");
+        }
+        userService.deleteUser(id);
+        return ResponseEntity.status(HttpStatus.OK).body("User with id " +id+ " deleted.");
+    }
+    @GetMapping("/users")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<List<User>> getUsers() {
+        List<User> users = userService.findAllUsers();
+        return ResponseEntity.status(HttpStatus.OK).body(users);
+    }
+
+    @PutMapping("/users/")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<String> updateUser(@RequestBody User user) {
+        User foundUser = userService.findUserById(user.getId());
+        if(foundUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with id " + user.getId() + " not found.");
+        }
+        userService.updateUser(user);
+        return ResponseEntity.status(HttpStatus.OK).body("User with id " + user.getId() + " updated.");
+    }
+
+    @PostMapping("/users/")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<String> addUser(@RequestBody User user) {
+
+        if(user.getName()==null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Incorrect user data.");
+        }
+        userService.saveUser(user);
+        return ResponseEntity.status(HttpStatus.OK).body("User added.");
+    }
 }
 
 

@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-<form th:action="@{/admin/addUser}" method="post">
+<form id="addUserForm">
     <div>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username"/>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="username"/>
     </div>
     <br>
     <div>
@@ -17,14 +18,41 @@
     </div>
     <br>
     <div>
-        <label for="role">Role:</label>
-        <input type="text" id="role" name="role"/>
+        <label for="roles">Roles:</label>
+        <input type="text" id="roles" name="role"/>
     </div>
     <div>
         <label for="password">Password:</label>
         <input type="text" id="password" name="password"/>
     </div>
-    <input type="submit"/>
+    <button type="button" id="submitButton">Update</button>
 </form>
+<script>
+    $(document).ready(function() {
+        $('#submitButton').click(function() {
+            const userData = {
+                name: $('#name').val(),
+                surname: $('#surname').val(),
+                role: $('#roles').val(),
+                password: $('#password').val()
+            };
+
+            $.ajax({
+                url: '/api/users/' ,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(userData),
+                success: function(response) {
+                    alert('User updated successfully:' + response);
+                    window.location.href = '/admin';
+
+                },
+                error: function(jqXHR) {
+                    alert('Error occurred while updating user: ' + jqXHR.responseText);
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>
