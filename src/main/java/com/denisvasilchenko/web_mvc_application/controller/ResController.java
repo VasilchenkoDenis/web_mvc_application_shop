@@ -120,8 +120,8 @@ public class ResController {
     @PostMapping("/users/")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> addUser(@RequestBody User user) {
-        System.out.println(user.getName());
-        if(user==null){
+
+        if(user.getName()==null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Incorrect user data.");
         }
         userService.saveUser(user);
