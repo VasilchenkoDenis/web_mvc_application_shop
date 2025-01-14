@@ -263,11 +263,18 @@
             contentType: 'application/json',
             data: JSON.stringify(products),
             success: function (response) {
-                alert('Products successfully sold!');
+                alert(response);
 
             },
-            error: function (error) {
-                alert('An error occurred while selling the goods.');
+            error: function (jqXHR) {
+                // Обработка ошибок
+                if (jqXHR.status === 400) {
+                    alert('Ошибка: ' + jqXHR.responseText); // Плохие данные
+                } else if (jqXHR.status === 500) {
+                    alert('Ошибка сервера: ' + jqXHR.responseText); // Ошибка сервера
+                } else {
+                    alert('Произошла ошибка: ' + jqXHR.statusText); // Другие ошибки
+                }
             }
         });
     });
