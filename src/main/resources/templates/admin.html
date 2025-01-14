@@ -24,6 +24,7 @@
 <body>
 <h1>User list</h1>
 <table>
+    <thead>
     <tr>
         <th>ID</th>
         <th>UserName</th>
@@ -32,6 +33,8 @@
         <th>Roles</th>
         <th>Actions</th>
     </tr>
+    </thead>
+    <tbody id="userTableBody">
     <tr th:each="user : ${allUsers}">
         <td th:text="${user.id}"></td>
         <td th:text="${user.name}"></td>
@@ -40,16 +43,65 @@
         <td th:text="${user.role}"></td>
         <td>
             <div style="display: flex; gap: 10px; justify-content: center">
-                <form th:action="@{/admin/delete/{id}(id=${user.id})}" method="post">
-                    <button type="submit" name="delete" th:text="'Delete'">Delete</button>
-                </form>
-                <form th:action="@{/admin/updateUser/{id}(id=${user.id})}" method="post">
+                <button type="button" th:onclick="'deleteUser(' + ${user.id} + ')'" th:text="'Delete'">Delete</button>
+                <form th:action="@{/admin/updateUser/{id}(id=${user.id})}" method="get">
                     <button type="submit" name="update" th:text="'Update'">Update</button>
                 </form>
             </div>
         </td>
     </tr>
+    </tbody>
 </table>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function deleteUser(userId) {
+        $.ajax({
+            url: '/api/users/' + userId,
+            method: 'DELETE',
+            success: function (response) {
+                alert(response);
+
+                updateUserList();
+            },
+            error: function (jqXHR) {
+                alert('Error occurred while deleting user: ' + jqXHR.responseText);
+            }
+        });
+    }
+
+    function updateUserList() {
+        $.ajax({
+            url: '/api/users',
+            method: 'GET',
+            success: function (users) {
+                console.log(users)
+                var tableBody = '';
+                users.forEach(function (user) {
+                    tableBody += '<tr>' +
+                        '<td>' + user.id + '</td>' +
+                        '<td>' + user.name + '</td>' +
+                        '<td>' + user.surname + '</td>' +
+                        '<td>' + user.password + '</td>' +
+                        '<td>' + user.role + '</td>' +
+                        '<td>' +
+                        '<div style="display: flex; gap: 10px; justify-content: center">' +
+                        '<button type="button" onclick="deleteUser(' + user.id + ')">Delete</button>' +
+                        '</div>' +
+                        '</td>' +
+                        '</tr>';
+                });
+
+
+                $('#userTableBody').html(tableBody);
+            },
+            error: function (jqXHR) {
+                alert('Error fetching user list: ' + jqXHR.responseText);
+            }
+        });
+    }
+</script>
+
 <form th:action="@{/admin/addUser}" method="get">
     <button type="submit" name="add" th:text="'Add User'">Add User</button>
 </form>
