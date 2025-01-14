@@ -33,14 +33,14 @@ public class ResController {
     @Autowired
     private Shop shop;
 
-    @GetMapping("/products/{searchTerm}")
-    public ResponseEntity<?> search(@PathVariable String searchTerm) {
-        List<Product> products = productService.findProductByName(searchTerm);
+    @GetMapping("/products")
+    public ResponseEntity<?> search(@RequestParam String search) {
+        List<Product> products = productService.findProductByName(search);
 
         if (!products.isEmpty()) {
             return ResponseEntity.ok(products);
         } else {
-            List<Product> similarProducts = productService.findSimilarProducts(searchTerm);
+            List<Product> similarProducts = productService.findSimilarProducts(search);
             String message = "Товар не существует. Возможно Вам подойдет: " + similarProducts.get(0).getName();
 
             ErrorResponse errorResponse = new ErrorResponse(message, similarProducts);
@@ -65,10 +65,10 @@ public class ResController {
         }
     }
 
-    @GetMapping("/sales/{selectedDate}")
+    @GetMapping("/sales")
     @PreAuthorize("hasAuthority('ROLE_SELLER')")
-    public ResponseEntity<List<Sale>> getSalesByDate(@PathVariable String selectedDate) {
-        List<Sale> sales = saleService.getSalesPerDay(LocalDate.parse(selectedDate));
+    public ResponseEntity<List<Sale>> getSalesByDate(@RequestParam String date) {
+        List<Sale> sales = saleService.getSalesPerDay(LocalDate.parse(date));
         return ResponseEntity.ok(sales);
     }
 
