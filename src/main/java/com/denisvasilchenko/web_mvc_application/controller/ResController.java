@@ -64,11 +64,11 @@ public class ResController {
         }
     }
 
-    @PostMapping("/store/salesList")
+    @GetMapping("/api/sales/{selectedDate}")
     @PreAuthorize("hasAuthority('ROLE_SELLER')")
-    public ResponseEntity<List<Sale>> showSalePerDate(@RequestBody String date) {
-        System.out.println(date);
-        List<Sale> sales = saleService.getSalesPerDay(LocalDate.parse(date));
+    public ResponseEntity<List<Sale>> getSalesByDate(@PathVariable String selectedDate) {
+        System.out.println(selectedDate);
+        List<Sale> sales = saleService.getSalesPerDay(LocalDate.parse(selectedDate));
         return ResponseEntity.ok(sales);
     }
 
