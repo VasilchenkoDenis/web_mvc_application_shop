@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api")
 public class ResController {
     @Autowired
     private ProductService productService;
@@ -32,8 +33,8 @@ public class ResController {
     @Autowired
     private Shop shop;
 
-    @GetMapping("/store/search")
-    public ResponseEntity<?> search(@RequestParam String searchTerm) {
+    @GetMapping("/products/{searchTerm}")
+    public ResponseEntity<?> search(@PathVariable String searchTerm) {
         List<Product> products = productService.findProductByName(searchTerm);
 
         if (!products.isEmpty()) {
@@ -47,8 +48,8 @@ public class ResController {
         }
     }
 
-    @PostMapping("/store/sell")
-    public ResponseEntity<String> sellProduct(@RequestBody List<Product> products) {
+    @PostMapping("/sales")
+    public ResponseEntity<String> addSale(@RequestBody List<Product> products) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userService.findUserByName(username);
@@ -64,7 +65,7 @@ public class ResController {
         }
     }
 
-    @GetMapping("/api/sales/{selectedDate}")
+    @GetMapping("/sales/{selectedDate}")
     @PreAuthorize("hasAuthority('ROLE_SELLER')")
     public ResponseEntity<List<Sale>> getSalesByDate(@PathVariable String selectedDate) {
         System.out.println(selectedDate);
@@ -72,10 +73,10 @@ public class ResController {
         return ResponseEntity.ok(sales);
     }
 
-    @PostMapping("/store/returnSale")
-    @PreAuthorize("hasAuthority('ROLE_SELLER')")
-    public ResponseEntity<String> returnSale(@RequestBody String id) {
-        Sale sale = saleService.getSale(Long.parseLong(id));
+    @PostMapping("/returns")
+//    @PreAuthorize("hasAuthority('ROLE_SELLER')")
+    public ResponseEntity<String> addReturn(@RequestBody Sale sale) {
+//        Sale sale = saleService.getSale(Long.parseLong(id));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userService.findUserByName(username);
