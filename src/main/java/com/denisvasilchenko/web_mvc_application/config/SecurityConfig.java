@@ -36,6 +36,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> auth.requestMatchers("/store/**").hasRole("SELLER")
                 .requestMatchers("/").hasAnyRole("ADMIN", "SELLER")
+                .requestMatchers("/api/**").hasAnyRole("ADMIN", "SELLER")
                 .requestMatchers("/error/**").hasAnyRole("ADMIN", "SELLER")
                 .requestMatchers("/admin/**").hasRole("ADMIN")).formLogin(AbstractAuthenticationFilterConfigurer::permitAll).build();
     }
