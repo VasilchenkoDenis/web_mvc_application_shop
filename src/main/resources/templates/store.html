@@ -154,8 +154,9 @@
     $(document).ready(function () {
         $('#searchButton').click(function () {
             const searchTerm = $('#searchInput').val();
+
             $.ajax({
-                url: `/api/products/${searchTerm}`,
+                url: `/api/products?search=${encodeURIComponent(searchTerm)}`,
                 type: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
