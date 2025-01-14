@@ -111,7 +111,7 @@
                 });
                 document.querySelectorAll('.returnButton').forEach(button => {
                     button.addEventListener('click', function () {
-                        const sale = JSON.parse(this.getAttribute('data-sale'));;
+                        const sale = JSON.parse(this.getAttribute('data-sale'));
                         // Отправка запроса на возврат
                         fetch('/api/returns', {
                             method: 'POST',
