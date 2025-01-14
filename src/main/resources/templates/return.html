@@ -104,21 +104,21 @@
             </table>
           </td>
           <td>
-            <button class="returnButton" data-sale-id="${sale.id}">Return</button>
+            <button class="returnButton" data-sale='${JSON.stringify(sale)}'>Return</button>
           </td>
         `;
                     salesTableBody.appendChild(row);
                 });
                 document.querySelectorAll('.returnButton').forEach(button => {
                     button.addEventListener('click', function () {
-                        const saleId = this.getAttribute('data-sale-id');
+                        const sale = JSON.parse(this.getAttribute('data-sale'));;
                         // Отправка запроса на возврат
-                        fetch('/store/returnSale', {
+                        fetch('/api/returns', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
                             },
-                            body: saleId,
+                            body: JSON.stringify(sale),
                         })
                             .then(response => response.text())
                             .then(result => {
