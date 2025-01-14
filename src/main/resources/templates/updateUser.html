@@ -2,28 +2,59 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Update User</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-<form th:action="@{/admin/updateUser}" method="post" th:object="${user}">
-    <input type="hidden" th:field="*{id}"/>
+<form id="updateUserForm">
+    <input type="hidden" id="userId" th:value="${user.id}"/>
     <div>
         <label for="name">UserName:</label>
-        <input type="text" id="name" th:field="*{name}"/>
+        <input type="text" id="name" th:value="${user.name}" />
     </div>
     <div>
         <label for="surname">Surname:</label>
-        <input type="text" id="surname" th:field="*{surname}"/>
+        <input type="text" id="surname" th:value="${user.surname}" />
     </div>
     <div>
         <label for="roles">Roles:</label>
-        <input type="text" id="roles" th:field="*{role}"/>
+        <input type="text" id="roles" th:value="${user.role}" />
     </div>
     <div>
         <label for="password">Password:</label>
-        <input type="text" id="password" th:field="*{password}"/>
+        <input type="text" id="password" th:value="${user.password}" />
     </div>
-    <button type="submit">Update</button>
+    <button type="button" id="submitButton">Update</button>
 </form>
+
+<script>
+    $(document).ready(function() {
+        $('#submitButton').click(function() {
+            const userId = $('#userId').val();
+            const userData = {
+                id: userId,
+                name: $('#name').val(),
+                surname: $('#surname').val(),
+                role: $('#roles').val(),
+                password: $('#password').val()
+            };
+
+            $.ajax({
+                url: '/api/users/' ,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(userData),
+                success: function(response) {
+                    alert('User updated successfully' + response);
+                    window.location.href = '/admin';
+
+                },
+                error: function(jqXHR) {
+                    alert('Error occurred while updating user: ' + jqXHR.responseText);
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>
