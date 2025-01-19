@@ -2,7 +2,9 @@ package com.denisvasilchenko.web_mvc_application.controller;
 
 
 import com.denisvasilchenko.web_mvc_application.ErrorResponse;
-import com.denisvasilchenko.web_mvc_application.entity.*;
+import com.denisvasilchenko.web_mvc_application.entity.Product;
+import com.denisvasilchenko.web_mvc_application.entity.Sale;
+import com.denisvasilchenko.web_mvc_application.entity.User;
 import com.denisvasilchenko.web_mvc_application.service.ProductService;
 import com.denisvasilchenko.web_mvc_application.service.ReturnService;
 import com.denisvasilchenko.web_mvc_application.service.SaleService;
@@ -19,6 +21,16 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.springframework.util.CollectionUtils.isEmpty;
+
+//на мой взгляд лучше разнести этот контроллер на несколько более специфичных, например
+//UserController , SalesController ProductsController
+//тогда у тебя в самом верху может быть @RequestMapping("/api/users") - как пример для UserController
+//просто в случае большого проекта ты хочешь найти контроллер для юзера и все эндпоинты спрятаны в ResController
+//который непонятно почему так назван
+
+//разделения его будет больше соответствовать Single-responsibility principle (SRP), вот можно почитать:
+//https://ru.wikipedia.org/wiki/%D0%9F%D1%80%D0%B8%D0%BD%D1%86%D0%B8%D0%BF_%D0%B5%D0%B4%D0%B8%D0%BD%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D0%BE%D0%B9_%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D0%BE%D1%81%D1%82%D0%B8
 @RestController
 @RequestMapping("/api")
 public class ResController {
@@ -53,13 +65,21 @@ public class ResController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userService.findUserByName(username);
-        if (products == null || products.isEmpty()) {
+        //есть библиотеки Apache Commons и Google Guava которые предоставляют удобные методы для таких вещей
+        //например CollectionUtils.isEmpty(products)
+        //вижу такое есть еще и в спринге
+        //внутри он делает тоже самое, ты можешь даже статически импортировать этот метод
+        //import static org.springframework.util.CollectionUtils.isEmpty;
+        //и будет еще красивее просто if (isEmpty(products))
+        if (isEmpty(products)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Incorrect product data.");
         }
         try {
             saleService.addSale(products, user);
             return ResponseEntity.status(HttpStatus.OK).body("Sale added.");
         } catch (Exception e) {
+            //попробуй все же добавить Log4j библиотеку чтобы логи более красиво писало
+            //в реальности никогда в приложениях System.out.println не используется
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

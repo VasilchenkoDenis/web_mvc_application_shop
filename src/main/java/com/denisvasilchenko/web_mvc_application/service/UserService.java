@@ -17,6 +17,9 @@ public class UserService {
 
     public User findUserById(int id) {
         Optional<User> user = userRepository.findById(id);
+        //как я уже писал лучше либо возвращать Optional в этом методе либо сделать
+        //user.orElseThrow(() -> new UsernameNotFoundException("Cannot find user by id:%s".formatted(id)));
+        //null никогда не возвращается
         return user.orElse(null);
     }
 
@@ -24,6 +27,8 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    //результат saveUser нигде не используется, если пытаешься добавить юзера с тем же именем то ни ошибки не будет
+    //и юзер не добавится, подумай как можно улучшить (может стоить выбрасывать ошибку?)
     public boolean saveUser(User user) {
         User savedUser = userRepository.findUserByName(user.getName());
         if (savedUser != null) {
@@ -45,6 +50,9 @@ public class UserService {
         userRepository.save(user);
     }
 
+    //есть такая конвенция, если метод начинается с find то он возвращает либо List либо Optional
+    //если у тебя User то должно быть getUserByName
+    //посмотри все похожие методы и поправь
     public User findUserByName(String name) {
         return userRepository.findUserByName(name);
     }
